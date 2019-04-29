@@ -13,7 +13,7 @@ public class CommunicateActivity extends AppCompatActivity {
 
     private TextView connectionText;
     private EditText messageBox;
-    private Button sendButton, connectButton;
+    private Button sendButton;
 
     private CommunicateViewModel viewModel;
 
@@ -40,7 +40,6 @@ public class CommunicateActivity extends AppCompatActivity {
         connectionText = findViewById(R.id.communicate_connection_text);
         messageBox = findViewById(R.id.communicate_message);
         sendButton = findViewById(R.id.communicate_send);
-        connectButton = findViewById(R.id.communicate_connect);
 
         // Start observing the data sent to us by the ViewModel
         viewModel.getConnectionStatus().observe(this, this::onConnectionStatus);
@@ -69,25 +68,18 @@ public class CommunicateActivity extends AppCompatActivity {
                 connectionText.setText(R.string.status_connected);
                 messageBox.setEnabled(true);
                 sendButton.setEnabled(true);
-                connectButton.setEnabled(true);
-                connectButton.setText(R.string.disconnect);
-                connectButton.setOnClickListener(v -> viewModel.disconnect());
                 break;
 
             case CONNECTING:
                 connectionText.setText(R.string.status_connecting);
                 messageBox.setEnabled(false);
                 sendButton.setEnabled(false);
-                connectButton.setEnabled(false);
-                connectButton.setText(R.string.connect);
                 break;
 
             case DISCONNECTED:
                 connectionText.setText(R.string.status_disconnected);
                 messageBox.setEnabled(false);
                 sendButton.setEnabled(false);
-                connectButton.setEnabled(true);
-                connectButton.setText(R.string.connect);
                 break;
         }
     }
