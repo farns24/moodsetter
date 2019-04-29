@@ -61,6 +61,7 @@ public class CommunicateActivity extends AppCompatActivity {
 
         // Setup the send button click action
         sendButton.setOnClickListener(v -> viewModel.sendMessage(messageBox.getText().toString()));
+        viewModel.connect();
     }
 
     // Called when the ViewModel updates us of our connectivity status
@@ -89,7 +90,6 @@ public class CommunicateActivity extends AppCompatActivity {
                 sendButton.setEnabled(false);
                 connectButton.setEnabled(true);
                 connectButton.setText(R.string.connect);
-                connectButton.setOnClickListener(v -> viewModel.connect());
                 break;
         }
     }
