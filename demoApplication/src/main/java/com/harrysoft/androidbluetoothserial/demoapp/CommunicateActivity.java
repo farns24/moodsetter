@@ -7,14 +7,14 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 public class CommunicateActivity extends AppCompatActivity {
 
     private TextView connectionText;
-    private EditText messageBox;
-    private Button sendButton;
 
+    private SeekBar seekBar;
     private CommunicateViewModel viewModel;
 
     @Override
@@ -38,8 +38,7 @@ public class CommunicateActivity extends AppCompatActivity {
 
         // Setup our Views
         connectionText = findViewById(R.id.communicate_connection_text);
-        messageBox = findViewById(R.id.communicate_message);
-        sendButton = findViewById(R.id.communicate_send);
+        seekBar = findViewById(R.id.seekbar);
 
         // Start observing the data sent to us by the ViewModel
         viewModel.getConnectionStatus().observe(this, this::onConnectionStatus);
@@ -51,13 +50,25 @@ public class CommunicateActivity extends AppCompatActivity {
         });
         viewModel.getMessage().observe(this, message -> {
             // Only update the message if the ViewModel is trying to reset it
-            if (TextUtils.isEmpty(message)) {
-                messageBox.setText(message);
-            }
         });
 
         // Setup the send button click action
-        sendButton.setOnClickListener(v -> viewModel.sendMessage(messageBox.getText().toString()));
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                viewModel.sendMessage(PositionToCodeUtils.getCode(i));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
         viewModel.connect();
     }
 
@@ -66,20 +77,17 @@ public class CommunicateActivity extends AppCompatActivity {
         switch (connectionStatus) {
             case CONNECTED:
                 connectionText.setText(R.string.status_connected);
-                messageBox.setEnabled(true);
-                sendButton.setEnabled(true);
+                seekBar.setEnabled(true);
                 break;
 
             case CONNECTING:
                 connectionText.setText(R.string.status_connecting);
-                messageBox.setEnabled(false);
-                sendButton.setEnabled(false);
+                seekBar.setEnabled(false);
                 break;
 
             case DISCONNECTED:
                 connectionText.setText(R.string.status_disconnected);
-                messageBox.setEnabled(false);
-                sendButton.setEnabled(false);
+                seekBar.setEnabled(false);
                 break;
         }
     }

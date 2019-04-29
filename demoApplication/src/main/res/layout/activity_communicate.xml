@@ -39,20 +39,13 @@
         android:layout_marginLeft="@dimen/margin"
         android:layout_marginRight="@dimen/margin" >
 
-        <EditText
-            android:id="@+id/communicate_message"
-            android:hint="@string/message"
+        <SeekBar
+            android:id="@+id/seekbar"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:inputType="text" />
-
-        <Button
-            android:id="@+id/communicate_send"
-            android:text="@string/send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
+            android:layout_weight="1"
+            android:inputType="text"
+            android:max="25" />
     </LinearLayout>
 
 </LinearLayout>
