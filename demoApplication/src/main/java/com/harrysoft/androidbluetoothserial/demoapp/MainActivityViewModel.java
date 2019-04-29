@@ -6,13 +6,16 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.widget.Toast;
 
 import com.harrysoft.androidbluetoothserial.BluetoothManager;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class MainActivityViewModel extends AndroidViewModel {
 
@@ -51,8 +54,11 @@ public class MainActivityViewModel extends AndroidViewModel {
     }
 
     // Called by the activity to request that we refresh the list of paired devices
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void refreshPairedDevices() {
-        pairedDeviceList.postValue(bluetoothManager.getPairedDevicesList());
+        List<BluetoothDevice> deviceList = bluetoothManager.getPairedDevicesList();
+        List<BluetoothDevice> filteredList = deviceList.stream().filter(item -> item.getName().equals("Fireplace display")).collect(Collectors.toList());
+        pairedDeviceList.postValue(filteredList);
     }
 
     // Called when the activity finishes - clear up after ourselves.
