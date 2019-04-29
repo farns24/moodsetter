@@ -3,11 +3,14 @@ package com.harrysoft.androidbluetoothserial.demoapp;
 import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -15,12 +18,16 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class CommunicateActivity extends AppCompatActivity {
 
     private TextView connectionText;
 
     private SeekBar seekBar;
     private CommunicateViewModel viewModel;
+    private Button cooldownBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +64,7 @@ public class CommunicateActivity extends AppCompatActivity {
 
         // Setup our Views
         connectionText = findViewById(R.id.communicate_connection_text);
+        cooldownBtn = findViewById(R.id.cool_down_btn);
         seekBar = findViewById(R.id.seekbar);
 
         // Start observing the data sent to us by the ViewModel
@@ -70,6 +78,7 @@ public class CommunicateActivity extends AppCompatActivity {
         viewModel.getMessage().observe(this, message -> {
             // Only update the message if the ViewModel is trying to reset it
         });
+
 
         // Setup the send button click action
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -88,7 +97,42 @@ public class CommunicateActivity extends AppCompatActivity {
 
             }
         });
+
+        cooldownBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO move this to a service some day (To allow the app to close without ruining the cooldown process)
+                Timer timer = new Timer();
+                TimerTask timerTask = getTimerTask(timer);
+
+                timer.schedule(timerTask, 1000 * 12);
+
+
+            }
+        });
+
         viewModel.connect();
+    }
+
+    private TimerTask getTimerTask(Timer timer) {
+        return new TimerTask() {
+            @Override
+            public void run() {
+                //decriment brightness
+                int progress = seekBar.getProgress();
+                if (progress > 0) {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            seekBar.setProgress(progress - 1);
+                        }
+                    });
+
+                    //if still on, re-enqueue
+                    timer.schedule(getTimerTask(timer), 1000 * 12);
+                }
+            }
+        };
     }
 
     // Called when the ViewModel updates us of our connectivity status

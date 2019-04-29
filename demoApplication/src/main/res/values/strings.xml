@@ -17,4 +17,5 @@
     <string name="bluetooth_unavailable">Connection Failed.</string>
     <string name="message_send_error">Error sending message!</string>
     <string name="you_sent">You</string>
+    <string name="cool_down">Cool down</string>
 </resources>

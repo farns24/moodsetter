@@ -49,4 +49,9 @@
             android:max="25" />
     </LinearLayout>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/cool_down_btn"
+        android:text="@string/cool_down"/>
 </LinearLayout>
