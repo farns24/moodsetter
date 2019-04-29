@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 public class CommunicateActivity extends AppCompatActivity {
 
-    private TextView connectionText, messagesView;
+    private TextView connectionText;
     private EditText messageBox;
     private Button sendButton, connectButton;
 
@@ -38,7 +38,6 @@ public class CommunicateActivity extends AppCompatActivity {
 
         // Setup our Views
         connectionText = findViewById(R.id.communicate_connection_text);
-        messagesView = findViewById(R.id.communicate_messages);
         messageBox = findViewById(R.id.communicate_message);
         sendButton = findViewById(R.id.communicate_send);
         connectButton = findViewById(R.id.communicate_connect);
@@ -50,7 +49,6 @@ public class CommunicateActivity extends AppCompatActivity {
             if (TextUtils.isEmpty(message)) {
                 message = getString(R.string.no_messages);
             }
-            messagesView.setText(message);
         });
         viewModel.getMessage().observe(this, message -> {
             // Only update the message if the ViewModel is trying to reset it
